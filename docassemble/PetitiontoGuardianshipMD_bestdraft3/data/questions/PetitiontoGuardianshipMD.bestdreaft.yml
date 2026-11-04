@@ -79,9 +79,9 @@ initial: True
 code: |
   al_next_steps_enabled = True
   al_next_steps_intro_prompt = 'Start your guardianship petition today'
-  al_next_steps_title = 'Labeled labeled ccgn001-with-fields-with-fields'
+  al_next_steps_title = 'Petition for Guardianship of a Minor'
   al_next_steps_document_title = 'Petition'
-  al_next_steps_document_purpose = 'Application'
+  al_next_steps_document_purpose = 'Petition'
   al_next_steps_help_organization = 'Maryland Legal Aid'
   al_next_steps_help_url = 'https://www.mdlab.org'
   al_next_steps_generate_qr_code = False
@@ -1408,11 +1408,11 @@ objects:
 ---
 template: labeled_labeled_ccgn001withfieldswithfields_Post_interview_instructions_title
 content: |
-  Instructions
+  Next steps (keep for yourself)
 ---
 template: labeled_labeled_ccgn001withfieldswithfields_attachment_title
 content: |
-  Labeled labeled ccgn001-with-fields-with-fields
+  Petition for Guardianship of a Minor
 ---
 template: al_user_bundle_title
 content: |
