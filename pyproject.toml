@@ -16,6 +16,7 @@ dependencies = [
     "docassemble.ALAnyState @ git+https://github.com/SuffolkLITLab/docassemble-ALAnyState@main",
     "docassemble.ALToolbox @ git+https://github.com/SuffolkLITLab/docassemble-ALToolbox.git@main",
     "docassemble.AssemblyLine @ git+https://github.com/SuffolkLITLab/docassemble-AssemblyLine.git@main",
+    "docassemble.LITLabTheme @ git+https://github.com/SuffolkLITLab/docassemble-LITLabTheme@main",
 ]
 license = "MIT"
 license-files = [
