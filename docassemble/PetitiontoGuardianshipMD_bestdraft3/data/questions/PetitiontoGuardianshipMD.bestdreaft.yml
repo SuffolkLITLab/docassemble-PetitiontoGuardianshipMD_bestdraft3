@@ -9,7 +9,7 @@ metadata:
   title: >-
     Maryland Petition for Guardianship of Minor
   short title: >-
-    MD Petiton for Guardianship od Minor
+    MD Petiton for Guardianship of Minor
   description: |-
     This form is used to ask for guardianship of a minor in Maryland. It lets you request the right to make decisions for a minor child.
   can_I_use_this_form: |
@@ -124,8 +124,14 @@ code: |
   user_role = "plaintiff"
   user_ask_role = "plaintiff"
 
-  # Who is filling this out? Decides the rest of the flow.
   nav.set_section("about_you")
+
+  # Age check: anyone under 18 is stopped before the role question
+  filer_is_adult
+  if not filer_is_adult:
+    under_18_blocker
+
+  # Who is filling this out? Decides the rest of the flow.
   petitioner_role
 
   # Attorneys give their own details first; the petitioner is then the client.
@@ -163,9 +169,6 @@ code: |
     trial_court.phone_number = md_court_info[filing_county].get('phone', '')
   else:
     trial_court.phone_number
-  docket_number
-  docket_number_2
-
   # Children: name, birthdate, gender, parents, home, guardian
   nav.set_section("people")
   children.gather()
@@ -264,6 +267,28 @@ subquestion: |
   This petition asks the court to appoint a guardian of the **person** of a minor. It does not ask for guardianship of the minor’s property.
 ---
 ########## Who is filing ##########
+id: filer is adult
+question: |
+  Are you 18 years of age or older?
+fields:
+  - no label: filer_is_adult
+    datatype: yesnoradio
+---
+id: under 18 blocker
+event: under_18_blocker
+question: |
+  You must be 18 or older to use this form
+subquestion: |
+  Because you answered that you are under 18, you can't file a petition for guardianship of a minor with this form.
+
+  If you are under 18 and need help with a guardianship or custody situation, you can ask a trusted adult to help you, or contact [Maryland Legal Aid](https://www.mdlab.org) for free legal help.
+
+  If you answered by mistake, you can go back and change your answer.
+buttons:
+  - Go back and change my answer: undo
+  - Exit: exit
+    url: https://www.mdlab.org
+---
 id: petitioner role
 question: |
   Who is filling out this petition?
@@ -381,15 +406,6 @@ question: |
   What is the court's phone number?
 fields:
   - "Phone number": trial_court.phone_number
-    required: False
----
-id: docket number
-question: |
-  Docket number
-fields:
-  - "Docket number": docket_number
-    required: False
-  - "Docket number 2": docket_number_2
     required: False
 ---
 code: |
@@ -1123,6 +1139,11 @@ event: review_labeled_labeled_ccgn001withfieldswithfields
 question: |
   Review your answers
 review:
+  - Edit: filer_is_adult
+    button: |
+      **18 or older**
+
+      ${ word(yesno(filer_is_adult)) if defined('filer_is_adult') else '' }
   - Edit: petitioner_role
     button: |
       **Who is filing**
@@ -1153,11 +1174,6 @@ review:
       **County**
 
       ${ showifdef('filing_county') }
-  - Edit: docket_number
-    button: |
-      **Docket numbers**
-
-      ${ showifdef('docket_number') } ${ showifdef('docket_number_2') }
   - Edit: children.revisit
     button: |
       **Children**
@@ -1418,13 +1434,6 @@ attachment:
       - "trial_court_orphans_yes": ${ trial_court_orphans_yes }
       - "trial_court_address": ${ trial_court_address.on_one_line() }
       - "trial_court_phone_number": ${ trial_court.phone_number }
-      - "docket_number": ${ docket_number }
-      - "docket_number__1": ${ docket_number }
-      - "docket_number__2": ${ docket_number }
-      - "docket_number__3": ${ docket_number }
-      - "docket_number__4": ${ docket_number }
-      - "docket_number__5": ${ docket_number }
-      - "docket_number_2": ${ docket_number_2 }
       - "children1_name": ${ children[0] }
       - "children1_name__1": ${ children[0] }
       # ----- Type of guardianship (fixed to person) -----
