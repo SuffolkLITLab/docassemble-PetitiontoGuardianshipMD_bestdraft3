@@ -9,7 +9,7 @@ metadata:
   title: >-
     Maryland Petition for Guardianship of Minor
   short title: >-
-    MD Petiton for Guardianship of Minor
+    MD Petiton for Guardianship od Minor
   description: |-
     This form is used to ask for guardianship of a minor in Maryland. It lets you request the right to make decisions for a minor child.
   can_I_use_this_form: |
@@ -514,6 +514,13 @@ fields:
         [[petitioner_label, True], ["Someone else", False]]
 ---
 id: child other guardian
+sets:
+  - children[i].prospective_guardian.name.first
+  - children[i].prospective_guardian.name.last
+  - children[i].prospective_guardian.name.middle
+  - children[i].prospective_guardian.name.suffix
+  - children[i].prospective_guardian.age_stated
+  - children[i].prospective_guardian_rel
 question: |
   Who is the prospective guardian of ${ children[i] }?
 fields:
@@ -1083,16 +1090,18 @@ fields:
 ########## Residences (Paragraph 9) ##########
 id: any residences
 question: |
-  Where has the child lived in the last five years?
+  Has the child lived anywhere else in the last five years?
 subquestion: |
-  List everyone the child lived with over the past five years.
+  Do not count the child's current home. Answer "Yes" if the child has lived at any other address, or with anyone else, during the past five years.
 fields:
   - no label: residences.there_are_any
     datatype: yesnoradio
 ---
 id: residences item
 question: |
-  Tell us about the ${ ordinal(i) } place the child lived
+  Where else has the child lived? (${ ordinal(i) } place)
+subquestion: |
+  Tell us who the child lived with, the address, and about when. You can add more places on the next screen.
 fields:
   - "Who the child lived with": residences[i].person_name
   - "Their address": residences[i].address
@@ -1100,7 +1109,7 @@ fields:
 ---
 id: another residence
 question: |
-  Is there another place to tell us about?
+  Is there another place the child lived in the last five years?
 fields:
   - no label: residences.there_is_another
     datatype: yesnoradio
