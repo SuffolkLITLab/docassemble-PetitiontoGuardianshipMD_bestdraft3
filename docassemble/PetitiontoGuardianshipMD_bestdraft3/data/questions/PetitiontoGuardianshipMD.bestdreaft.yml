@@ -1464,24 +1464,24 @@ attachment:
   fields:
       # ----- Court and caption -----
       - "trial_court_county": ${ filing_county }
-      - "trial_court_circuit_yes": ${ trial_court_circuit_yes }
-      - "trial_court_orphans_yes": ${ trial_court_orphans_yes }
+      - "trial_court_circuit_yes": ${ court_type == 'circuit' }
+      - "trial_court_orphans_yes": ${ court_type == 'orphans' }
       - "trial_court_address": ${ trial_court_address.on_one_line() }
       - "trial_court_phone_number": ${ trial_court.phone_number }
       - "children1_name": ${ children[0] }
       - "children1_name__1": ${ children[0] }
       # ----- Type of guardianship (fixed to person) -----
-      - "guardianship_person_yes": ${ guardianship_person_yes }
-      - "guardianship_person_yes__1": ${ guardianship_person_yes }
-      - "guardianship_property_yes": ${ guardianship_property_yes }
-      - "guardianship_property_yes__1": ${ guardianship_property_yes }
-      - "guardianship_person_property_yes": ${ guardianship_person_property_yes }
-      - "guardianship_person_property_yes__1": ${ guardianship_person_property_yes }
+      - "guardianship_person_yes": ${ True }
+      - "guardianship_person_yes__1": ${ True }
+      - "guardianship_property_yes": ${ False }
+      - "guardianship_property_yes__1": ${ False }
+      - "guardianship_person_property_yes": ${ False }
+      - "guardianship_person_property_yes__1": ${ False }
       # ----- Petitioner -----
       - "users1_name": ${ users[0] }
       - "users1_name__1": ${ users[0] }
       - "users1_age": ${ users[0].age_in_years() }
-      - "users1_address_address": ${ users[0].address.address }
+      - "users1_address_address": ${ users[0].address.on_one_line() }
       - "users1_address_address__1": ${ users[0].address.address }
       - "users1_phone_number": ${ users[0].phone_number }
       - "users1_phone_number__3": ${ users[0].phone_number }
@@ -1490,42 +1490,42 @@ attachment:
       - "users1_email__2": ${ users[0].email }
       # ----- Paragraph 1: children -----
       - "children1_age": ${ children.item(0).age_in_years() }
-      - "children1_birthdate": ${ children.item(0).birthdate.format() }
+      - "children1_birthdate": ${ children.item(0).birthdate.format("MM/dd/yyyy") }
       - "children1_gender": ${ children.item(0).gender }
       - "children1_parent1_name": ${ children.item(0).parent1_name }
       - "children1_parent2_name": ${ children.item(0).parent2_name }
       - "children1_residence_address": ${ children.item(0).address.on_one_line() }
       - "children2_name": ${ children.item(1) }
       - "children2_age": ${ children.item(1).age_in_years() }
-      - "children2_birthdate": ${ children.item(1).birthdate.format() }
+      - "children2_birthdate": ${ children.item(1).birthdate.format("MM/dd/yyyy") }
       - "children2_gender": ${ children.item(1).gender }
       - "children2_parent1_name": ${ children.item(1).parent1_name }
       - "children2_parent2_name": ${ children.item(1).parent2_name }
       - "children2_residence_address": ${ children.item(1).address.on_one_line() }
       - "children3_name": ${ children.item(2) }
       - "children3_age": ${ children.item(2).age_in_years() }
-      - "children3_birthdate": ${ children.item(2).birthdate.format() }
+      - "children3_birthdate": ${ children.item(2).birthdate.format("MM/dd/yyyy") }
       - "children3_gender": ${ children.item(2).gender }
       - "children3_parent1_name": ${ children.item(2).parent1_name }
       - "children3_parent2_name": ${ children.item(2).parent2_name }
       - "children3_residence_address": ${ children.item(2).address.on_one_line() }
       - "children4_name": ${ children.item(3) }
       - "children4_age": ${ children.item(3).age_in_years() }
-      - "children4_birthdate": ${ children.item(3).birthdate.format() }
+      - "children4_birthdate": ${ children.item(3).birthdate.format("MM/dd/yyyy") }
       - "children4_gender": ${ children.item(3).gender }
       - "children4_parent1_name": ${ children.item(3).parent1_name }
       - "children4_parent2_name": ${ children.item(3).parent2_name }
       - "children4_residence_address": ${ children.item(3).address.on_one_line() }
       - "children5_name": ${ children.item(4) }
       - "children5_age": ${ children.item(4).age_in_years() }
-      - "children5_birthdate": ${ children.item(4).birthdate.format() }
+      - "children5_birthdate": ${ children.item(4).birthdate.format("MM/dd/yyyy") }
       - "children5_gender": ${ children.item(4).gender }
       - "children5_parent1_name": ${ children.item(4).parent1_name }
       - "children5_parent2_name": ${ children.item(4).parent2_name }
       - "children5_residence_address": ${ children.item(4).address.on_one_line() }
       - "children6_name": ${ children.item(5) }
       - "children6_age": ${ children.item(5).age_in_years() }
-      - "children6_birthdate": ${ children.item(5).birthdate.format() }
+      - "children6_birthdate": ${ children.item(5).birthdate.format("MM/dd/yyyy") }
       - "children6_gender": ${ children.item(5).gender }
       - "children6_parent1_name": ${ children.item(5).parent1_name }
       - "children6_parent2_name": ${ children.item(5).parent2_name }
@@ -1642,17 +1642,17 @@ attachment:
       # ----- Attorney block (only when an attorney files) -----
       - "attorney_name": ${ attorneys[0] if petitioner_role == 'attorney' else '' }
       - "attorney_signature": ${ attorneys[0].signature if petitioner_role == 'attorney' else '' }
-      - "attorney_signed_date": ${ attorney_signed_date.format() if petitioner_role == 'attorney' else '' }
+      - "attorney_signed_date": ${ signature_date.format("MM/dd/yyyy") if petitioner_role == 'attorney' else '' }
       - "attorney_number": ${ attorney_number if petitioner_role == 'attorney' else '' }
       - "attorney_phone_number": ${ attorneys[0].phone_number if petitioner_role == 'attorney' else '' }
       - "attorney_fax": ${ attorney_fax if petitioner_role == 'attorney' else '' }
       - "attorney_address_address": ${ attorneys[0].address.address if petitioner_role == 'attorney' else '' }
       - "attorney_email": ${ attorneys[0].email if petitioner_role == 'attorney' else '' }
-      - "attorney_address_city_zip": ${ attorney_address_city_zip if petitioner_role == 'attorney' else '' }
+      - "attorney_address_city_zip": ${ attorneys[0].address.line_two() if petitioner_role == 'attorney' else '' }
       # ----- Petitioner signature block (only when there is no attorney) -----
-      - "users1_address_city_zip": ${ users1_address_city_zip }
+      - "users1_address_city_zip": ${ users[0].address.line_two() }
       - "users1_fax": ${ users1_fax }
-      - "users1_signed_date": ${ users1_signed_date.format() if petitioner_role != 'attorney' else '' }
+      - "users1_signed_date": ${ signature_date.format("MM/dd/yyyy") if petitioner_role != 'attorney' else '' }
       - "users1_signature": ${ users[0].signature if petitioner_role != 'attorney' else '' }
 ---
 code: |
