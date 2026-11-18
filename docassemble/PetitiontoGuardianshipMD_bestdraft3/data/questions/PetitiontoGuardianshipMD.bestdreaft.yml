@@ -1,4 +1,11 @@
 ---
+translations:
+  - FamilySpanish11_es.xlsx
+---
+include:
+  - family_spanish_words.yml
+---
+---
 include:
   - docassemble.AssemblyLine:assembly_line.yml
   - docassemble.ALAnyState:any_state.yml
@@ -46,8 +53,7 @@ metadata:
   typical_role: "plaintiff"
   al_weaver_version: "2.4.0"
   generated_on: "2026-10-14"
-  languages:
-    - en
+  languages: [en, es]
   jurisdiction: "NAM-US-US+MD"
   review_date: 2026-10-14
   form_titles:
@@ -78,16 +84,9 @@ id: alweaver assemblyline settings
 initial: True
 code: |
   al_next_steps_enabled = True
-  al_next_steps_intro_prompt = 'Start your guardianship petition today'
-  al_next_steps_title = 'Petition for Guardianship of a Minor'
-  al_next_steps_document_title = 'Petition'
-  al_next_steps_document_purpose = 'Petition'
   al_next_steps_help_organization = 'Maryland Legal Aid'
   al_next_steps_help_url = 'https://www.mdlab.org'
   al_next_steps_generate_qr_code = False
-  al_next_steps_what_happens_next = 'Once you have sent your petition, you will need to wait for the court to set a hearing date. Make sure to tell all involved people about the petition and the hearing date.'
-  al_next_steps_what_can_decision_maker_do = "The court can approve your request for guardianship, deny it, or ask for more information. They may also choose a guardian ad litem to represent the minor's interests."
-  al_next_steps_what_happens_if_i_win = 'If your petition is approved, the guardian will be able to make decisions about the minor’s welfare, education, and medical care.'
 ---
 objects:
   - trial_court_address: ALAddress
@@ -460,7 +459,7 @@ question: |
 fields:
   - Birthdate: children[i].birthdate
     datatype: date
-    max: ${ today() }
+    max: "${ (today()).format('yyyy-MM-dd', language='en') }"
 ---
 id: child gender
 sets:
@@ -550,14 +549,14 @@ fields:
 validation code: |
   if children.there_is_another and len(children) >= 6:
     validation_error(
-        "This petition has room for six children. Choose No to finish this petition, "
-        "then start a separate petition for any other children.",
+        word("This petition has room for six children. Choose No to finish this petition, "
+        "then start a separate petition for any other children."),
         field="children.there_is_another",
     )
   if children.there_is_another and not children_next_is_full_sibling:
     validation_error(
-        "Half-siblings, and children who are not in the same situation, need their own petition. "
-        "Choose No above to finish this petition, then start a new petition for the other child.",
+        word("Half-siblings, and children who are not in the same situation, need their own petition. "
+        "Choose No above to finish this petition, then start a new petition for the other child."),
         field="children_next_is_full_sibling",
     )
 ---
@@ -1106,7 +1105,7 @@ question: |
 fields:
   - Birthdate: users[i].birthdate
     datatype: date
-    max: ${ today() }
+    max: "${ (today()).format('yyyy-MM-dd', language='en') }"
 ---
 ########## Residences (Paragraph 9) ##########
 id: any residences
@@ -1277,15 +1276,15 @@ table: users.table
 rows: users
 columns:
   - Name: |
-      row_item.name_full() if defined("row_item.name.first") else ""
+      row_item.name_full() if row_item.name.attribute_defined('first') else ""
   - Birthdate: |
-      row_item.birthdate if defined("row_item.birthdate") else ""
+      row_item.birthdate if row_item.attribute_defined('birthdate') else ""
   - Address: |
-      row_item.address.block() if defined("row_item.address.address") else ""
+      row_item.address.block() if row_item.address.attribute_defined('address') else ""
   - Phone number: |
-      row_item.phone_number if defined("row_item.phone_number") else ""
+      row_item.phone_number if row_item.attribute_defined('phone_number') else ""
   - Email: |
-      row_item.email if defined("row_item.email") else ""
+      row_item.email if row_item.attribute_defined('email') else ""
 edit:
   - name.first
   - birthdate
@@ -1293,6 +1292,8 @@ edit:
   - phone_number
   - email
 confirm: True
+edit header: |
+  ${ word("Actions") }
 ---
 id: edit attorneys
 continue button field: attorneys.revisit
@@ -1305,19 +1306,21 @@ table: attorneys.table
 rows: attorneys
 columns:
   - Name: |
-      row_item.name_full() if defined("row_item.name.first") else ""
+      row_item.name_full() if row_item.name.attribute_defined('first') else ""
   - Address: |
-      row_item.address.block() if defined("row_item.address.address") else ""
+      row_item.address.block() if row_item.address.attribute_defined('address') else ""
   - Phone number: |
-      row_item.phone_number if defined("row_item.phone_number") else ""
+      row_item.phone_number if row_item.attribute_defined('phone_number') else ""
   - Email: |
-      row_item.email if defined("row_item.email") else ""
+      row_item.email if row_item.attribute_defined('email') else ""
 edit:
   - name.first
   - address.address
   - phone_number
   - email
 confirm: True
+edit header: |
+  ${ word("Actions") }
 ---
 id: edit children
 continue button field: children.revisit
@@ -1336,11 +1339,11 @@ table: children.table
 rows: children
 columns:
   - Name: |
-      row_item.name_full() if defined("row_item.name.first") else ""
+      row_item.name_full() if row_item.name.attribute_defined('first') else ""
   - Birthdate: |
-      row_item.birthdate if defined("row_item.birthdate") else ""
+      row_item.birthdate if row_item.attribute_defined('birthdate') else ""
   - Gender: |
-      row_item.gender if defined("row_item.gender") else ""
+      row_item.gender if row_item.attribute_defined('gender') else ""
 edit:
   - name.first
   - birthdate
@@ -1348,6 +1351,8 @@ edit:
   - parent1_name
   - parent2_name
 confirm: True
+edit header: |
+  ${ word("Actions") }
 ---
 id: edit siblings
 continue button field: siblings.revisit
@@ -1362,19 +1367,21 @@ table: siblings.table
 rows: siblings
 columns:
   - Name: |
-      row_item.name_full() if defined("row_item.name.first") else ""
+      row_item.name_full() if row_item.name.attribute_defined('first') else ""
   - Address: |
-      row_item.address.block() if defined("row_item.address.address") else ""
+      row_item.address.block() if row_item.address.attribute_defined('address') else ""
   - Phone number: |
-      row_item.phone_number if defined("row_item.phone_number") else ""
+      row_item.phone_number if row_item.attribute_defined('phone_number') else ""
   - Email: |
-      row_item.email if defined("row_item.email") else ""
+      row_item.email if row_item.attribute_defined('email') else ""
 edit:
   - name.first
   - address.address
   - phone_number
   - email
 confirm: True
+edit header: |
+  ${ word("Actions") }
 ---
 id: edit residences
 continue button field: residences.revisit
@@ -1389,16 +1396,18 @@ table: residences.table
 rows: residences
 columns:
   - Lived with: |
-      row_item.person_name if defined("row_item.person_name") else ""
+      row_item.person_name if row_item.attribute_defined('person_name') else ""
   - Address: |
-      row_item.address if defined("row_item.address") else ""
+      row_item.address if row_item.attribute_defined('address') else ""
   - Dates: |
-      row_item.dates if defined("row_item.dates") else ""
+      row_item.dates if row_item.attribute_defined('dates') else ""
 edit:
   - person_name
   - address
   - dates
 confirm: True
+edit header: |
+  ${ word("Actions") }
 ---
 id: download labeled_labeled_ccgn001withfieldswithfields
 event: labeled_labeled_ccgn001withfieldswithfields_download
@@ -1490,42 +1499,42 @@ attachment:
       - "users1_email__2": ${ users[0].email }
       # ----- Paragraph 1: children -----
       - "children1_age": ${ children.item(0).age_in_years() }
-      - "children1_birthdate": ${ children.item(0).birthdate.format("MM/dd/yyyy") }
+      - "children1_birthdate": ${ children.item(0).birthdate.format("MM/dd/yyyy", language='en') }
       - "children1_gender": ${ children.item(0).gender }
       - "children1_parent1_name": ${ children.item(0).parent1_name }
       - "children1_parent2_name": ${ children.item(0).parent2_name }
       - "children1_residence_address": ${ children.item(0).address.on_one_line() }
       - "children2_name": ${ children.item(1) }
       - "children2_age": ${ children.item(1).age_in_years() }
-      - "children2_birthdate": ${ children.item(1).birthdate.format("MM/dd/yyyy") }
+      - "children2_birthdate": ${ children.item(1).birthdate.format("MM/dd/yyyy", language='en') }
       - "children2_gender": ${ children.item(1).gender }
       - "children2_parent1_name": ${ children.item(1).parent1_name }
       - "children2_parent2_name": ${ children.item(1).parent2_name }
       - "children2_residence_address": ${ children.item(1).address.on_one_line() }
       - "children3_name": ${ children.item(2) }
       - "children3_age": ${ children.item(2).age_in_years() }
-      - "children3_birthdate": ${ children.item(2).birthdate.format("MM/dd/yyyy") }
+      - "children3_birthdate": ${ children.item(2).birthdate.format("MM/dd/yyyy", language='en') }
       - "children3_gender": ${ children.item(2).gender }
       - "children3_parent1_name": ${ children.item(2).parent1_name }
       - "children3_parent2_name": ${ children.item(2).parent2_name }
       - "children3_residence_address": ${ children.item(2).address.on_one_line() }
       - "children4_name": ${ children.item(3) }
       - "children4_age": ${ children.item(3).age_in_years() }
-      - "children4_birthdate": ${ children.item(3).birthdate.format("MM/dd/yyyy") }
+      - "children4_birthdate": ${ children.item(3).birthdate.format("MM/dd/yyyy", language='en') }
       - "children4_gender": ${ children.item(3).gender }
       - "children4_parent1_name": ${ children.item(3).parent1_name }
       - "children4_parent2_name": ${ children.item(3).parent2_name }
       - "children4_residence_address": ${ children.item(3).address.on_one_line() }
       - "children5_name": ${ children.item(4) }
       - "children5_age": ${ children.item(4).age_in_years() }
-      - "children5_birthdate": ${ children.item(4).birthdate.format("MM/dd/yyyy") }
+      - "children5_birthdate": ${ children.item(4).birthdate.format("MM/dd/yyyy", language='en') }
       - "children5_gender": ${ children.item(4).gender }
       - "children5_parent1_name": ${ children.item(4).parent1_name }
       - "children5_parent2_name": ${ children.item(4).parent2_name }
       - "children5_residence_address": ${ children.item(4).address.on_one_line() }
       - "children6_name": ${ children.item(5) }
       - "children6_age": ${ children.item(5).age_in_years() }
-      - "children6_birthdate": ${ children.item(5).birthdate.format("MM/dd/yyyy") }
+      - "children6_birthdate": ${ children.item(5).birthdate.format("MM/dd/yyyy", language='en') }
       - "children6_gender": ${ children.item(5).gender }
       - "children6_parent1_name": ${ children.item(5).parent1_name }
       - "children6_parent2_name": ${ children.item(5).parent2_name }
@@ -1642,7 +1651,7 @@ attachment:
       # ----- Attorney block (only when an attorney files) -----
       - "attorney_name": ${ attorneys[0] if petitioner_role == 'attorney' else '' }
       - "attorney_signature": ${ attorneys[0].signature if petitioner_role == 'attorney' else '' }
-      - "attorney_signed_date": ${ signature_date.format("MM/dd/yyyy") if petitioner_role == 'attorney' else '' }
+      - "attorney_signed_date": ${ signature_date.format("MM/dd/yyyy", language='en') if petitioner_role == 'attorney' else '' }
       - "attorney_number": ${ attorney_number if petitioner_role == 'attorney' else '' }
       - "attorney_phone_number": ${ attorneys[0].phone_number if petitioner_role == 'attorney' else '' }
       - "attorney_fax": ${ attorney_fax if petitioner_role == 'attorney' else '' }
@@ -1652,7 +1661,7 @@ attachment:
       # ----- Petitioner signature block (only when there is no attorney) -----
       - "users1_address_city_zip": ${ users[0].address.line_two() }
       - "users1_fax": ${ users1_fax }
-      - "users1_signed_date": ${ signature_date.format("MM/dd/yyyy") if petitioner_role != 'attorney' else '' }
+      - "users1_signed_date": ${ signature_date.format("MM/dd/yyyy", language='en') if petitioner_role != 'attorney' else '' }
       - "users1_signature": ${ users[0].signature if petitioner_role != 'attorney' else '' }
 ---
 code: |
@@ -1684,3 +1693,11 @@ code: |
       labeled_labeled_ccgn001withfieldswithfields_attachment.overflow_fields[list_name].label = list_label
       labeled_labeled_ccgn001withfieldswithfields_attachment.overflow_fields[list_name].headers = people_headers
   labeled_labeled_ccgn001withfieldswithfields_attachment.overflow_fields.gathered = True
+---
+language: es
+sections:
+- about_you: Su información
+- case_details: Detalles del caso
+- people: Personas involucradas
+- sign_and_submit: Revisar y presentar
+- review_labeled_labeled_ccgn001withfieldswithfields: Revise sus respuestas
